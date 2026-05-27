@@ -1,36 +1,43 @@
 import streamlit as st
-import pickle
-import requests
-import io
-
-# 1. Define the direct download URL
-MODEL_URL = "https://docs.google.com/uc?export=download&confirm=t&id=1K7_pKHGyzW-HLp2FEWwxSwdb4S7P0wMF"
-
-# 2. Cache the download so it only happens once when the app starts up
+import joblib
 import os
 
+# 1. The local file path inside your project folder
+LOCAL_MODEL_PATH = "saved_model.joblib"
+
 @st.cache_resource
-def load_model_from_drive(url):
-    LOCAL_MODEL_PATH = "saved_model.pkl"
-    
-    # If the file was already downloaded successfully, load it instantly!
-    if os.path.exists(LOCAL_MODEL_PATH) and os.path.getsize(LOCAL_MODEL_PATH) > 100000000:
-        with open(LOCAL_MODEL_PATH, "rb") as f:
-            return pickle.load(f)
-            
-    # Otherwise, download it once and save it locally
-    try:
-        with st.spinner("Downloading ML Architecture from Google Drive... Please wait."):
-            response = requests.get(url, stream=True)
-            response.raise_for_status()
-            
-            # Save the raw bytes to the local server disk
-            with open(LOCAL_MODEL_PATH, "wb") as f:
-                f.write(response.content)
-                
-        with open(LOCAL_MODEL_PATH, "rb") as f:
-            return pickle.load(f)
-            
-    except Exception as e:
-        st.error(f"Error loading model: {e}")
+def load_model_locally():
+    if os.path.exists(LOCAL_MODEL_PATH):
+        try:
+            return joblib.load(LOCAL_MODEL_PATH)
+        except Exception as e:
+            st.error(f"Error loading model file: {e}")
+            return None
+    else:
+        st.error(f"Model file '{LOCAL_MODEL_PATH}' not found!")
         return None
+
+# 2. Load the model instantly from your local repo files
+model = load_model_locally()
+
+# =========================================================
+# YOUR ORIGINAL CODE (LINES 24-40) STARTS RIGHT HERE:
+# =========================================================
+st.title("🌾 CropCast Global Dashboard")
+# ... your inputs, sliders, and prediction logic continue here ...
+                    if chunk:
+                        f.write(chunk)
+                        
+        return joblib.load(LOCAL_MODEL_PATH)
+    except Exception as e:
+        st.error(f"Initialization Error: {e}")
+        return None
+
+# Load the model safely
+model = load_model_from_drive(MODEL_URL)
+
+# --- Your remaining Streamlit UI / Prediction code goes here ---
+st.title("🌾 CropCast Global Dashboard")
+if model is not None:
+    st.success("Predictive engine successfully loaded and cached!")
+
