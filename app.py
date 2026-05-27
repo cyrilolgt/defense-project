@@ -4,7 +4,7 @@ import requests
 import io
 
 # 1. Define the direct download URL
-MODEL_URL = 'https://drive.google.com/uc?export=download&id=1K7_pKHGyzW-HLp2FEWwxSwdb4S7P0wMF'
+MODEL_URL = "https://docs.google.com/uc?export=download&confirm=t&id=1K7_pKHGyzW-HLp2FEWwxSwdb4S7P0wMF"
 
 # 2. Cache the download so it only happens once when the app starts up
 @st.cache_resource
