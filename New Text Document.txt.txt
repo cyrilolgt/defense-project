@@ -1,0 +1,8 @@
+streamlit
+pandas
+scikit-learn
+NumPy
+Matplotlip
+Seaborn
+csv
+openweathera
